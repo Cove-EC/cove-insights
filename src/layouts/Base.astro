@@ -75,7 +75,7 @@ const defaultOgImage = `${siteUrl}/og-default.jpg`;
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300;1,9..40,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
 
   <!-- GA4 -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-CVBXNJGD79"></script>
@@ -88,47 +88,250 @@ const defaultOgImage = `${siteUrl}/og-default.jpg`;
 
   <style is:global>
     :root {
+      --bg: #0C0C0A;
+      --bg-elevated: #141412;
+      --bg-subtle: #1A1A17;
+      --text-primary: #F5F4F0;
+      --text-secondary: #9B9B8E;
+      --text-tertiary: #5C5C52;
       --gold: #C4A55A;
-      --text-primary: #1A1A1A;
-      --text-secondary: #6B7280;
-      --border: #E5E7EB;
-      --bg: #FAFAF8;
+      --gold-muted: #8A7340;
+      --gold-subtle: rgba(196, 165, 90, 0.12);
+      --border: rgba(245, 244, 240, 0.06);
+      --border-strong: rgba(245, 244, 240, 0.12);
+      --font-display: 'Instrument Serif', Georgia, serif;
+      --font-body: 'DM Sans', system-ui, sans-serif;
+      --space-xs: 4px;
+      --space-sm: 8px;
+      --space-md: 16px;
+      --space-lg: 24px;
+      --space-xl: 48px;
+      --space-2xl: 80px;
+      --space-3xl: 120px;
+      --max-content: 1280px;
+      --max-article: 680px;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: 'DM Sans', sans-serif;
+      font-family: var(--font-body);
       background: var(--bg);
       color: var(--text-primary);
       line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
     a { color: inherit; text-decoration: none; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
   </style>
 </head>
 <body>
   <!-- NAV -->
-  <nav style="border-bottom: 1px solid var(--border); padding: 0 2rem; height: 56px; display: flex; align-items: center; justify-content: space-between; background: white;">
-    <a href="https://covecollect.com" style="display: flex; align-items: center; gap: 8px;">
-      <span style="font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 18px; color: var(--text-primary);">Cove</span>
-      <span style="font-size: 12px; color: var(--text-secondary); font-weight: 400;">Insights</span>
+  <nav class="site-nav">
+    <a href="/" class="nav-wordmark">
+      <span class="nav-wordmark-cove">cove</span>
+      <span class="nav-wordmark-divider"></span>
+      <span class="nav-wordmark-insights">Insights</span>
     </a>
-    <a href="https://covecollect.com" style="font-size: 13px; font-weight: 500; color: var(--gold);">
-      Back to Cove &rarr;
-    </a>
+    <div class="nav-links">
+      <a href="https://covecollect.com" class="nav-link">The Platform</a>
+      <a href="/" class="nav-link">Insights</a>
+      <span class="nav-links-divider"></span>
+      <a href="https://covecollect.com" class="nav-link nav-link-gold">covecollect.com &rarr;</a>
+    </div>
+    <a href="https://covecollect.com" class="nav-link-mobile nav-link-gold">covecollect.com &rarr;</a>
   </nav>
 
   <slot />
 
   <!-- FOOTER -->
-  <footer style="border-top: 1px solid var(--border); padding: 3rem 2rem; margin-top: 4rem; text-align: center;">
-    <p style="font-size: 13px; color: var(--text-secondary);">
-      &copy; {new Date().getFullYear()} Cove Collect. Built for collectors who think in decades.
-    </p>
-    <p style="font-size: 12px; color: var(--text-secondary); margin-top: 8px;">
-      <a href="https://covecollect.com" style="color: var(--gold);">covecollect.com</a>
-    </p>
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-left">
+        <span class="footer-wordmark">cove</span>
+        <p class="footer-tagline">For collectors who think in decades.</p>
+      </div>
+      <div class="footer-right">
+        <p class="footer-copyright">&copy; {new Date().getFullYear()} Cove Collect</p>
+        <div class="footer-links">
+          <a href="https://covecollect.com">covecollect.com</a>
+          <a href="https://covecollect.com">Appraisals</a>
+          <a href="https://covecollect.com">Insurance</a>
+        </div>
+      </div>
+    </div>
   </footer>
 </body>
 </html>
+
+<style>
+  .site-nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    background: rgba(12, 12, 10, 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-wordmark {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .nav-wordmark-cove {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 22px;
+    color: var(--text-primary);
+  }
+
+  .nav-wordmark-divider {
+    width: 1px;
+    height: 16px;
+    background: var(--border-strong);
+  }
+
+  .nav-wordmark-insights {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .nav-link {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 13px;
+    color: var(--text-secondary);
+    transition: color 150ms;
+  }
+
+  .nav-link:hover {
+    color: var(--text-primary);
+  }
+
+  .nav-link-gold {
+    font-weight: 500;
+    color: var(--gold);
+  }
+
+  .nav-link-gold:hover {
+    color: var(--gold);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .nav-links-divider {
+    width: 1px;
+    height: 16px;
+    background: var(--border-strong);
+  }
+
+  .nav-link-mobile {
+    display: none;
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: 13px;
+  }
+
+  .site-footer {
+    border-top: 1px solid var(--border);
+    padding: 60px 2rem 40px;
+    margin-top: 0;
+  }
+
+  .footer-inner {
+    max-width: var(--max-content);
+    margin: 0 auto;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+
+  .footer-wordmark {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 18px;
+    color: var(--text-primary);
+  }
+
+  .footer-tagline {
+    font-family: var(--font-body);
+    font-weight: 300;
+    font-size: 13px;
+    color: var(--text-tertiary);
+    margin-top: 8px;
+  }
+
+  .footer-right {
+    text-align: right;
+  }
+
+  .footer-copyright {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 12px;
+    color: var(--text-tertiary);
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 16px;
+    margin-top: 8px;
+  }
+
+  .footer-links a {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 12px;
+    color: var(--text-tertiary);
+    transition: color 150ms;
+  }
+
+  .footer-links a:hover {
+    color: var(--gold);
+  }
+
+  @media (max-width: 640px) {
+    .site-nav {
+      padding: 0 1rem;
+    }
+
+    .nav-links {
+      display: none;
+    }
+
+    .nav-link-mobile {
+      display: block;
+    }
+
+    .footer-inner {
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .footer-right {
+      text-align: left;
+    }
+  }
+</style>
