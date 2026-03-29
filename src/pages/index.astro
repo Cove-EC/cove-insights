@@ -101,14 +101,14 @@ const categories = ['All', 'Art', 'Cars', 'Watches', 'Wine'];
                 </div>
               ) : (
                 <div class="article-text-card">
-                  <h2 class="article-text-card-headline">{article.headline}</h2>
+                  <h2 class="article-text-card-headline" style="font-style: normal;">{article.headline}</h2>
                 </div>
               )}
               <div class="article-card-body">
                 {article.primary_category && (
                   <span class="card-category">{article.primary_category}</span>
                 )}
-                <h2 class="article-card-headline">{article.headline}</h2>
+                <h2 class="article-card-headline" style="font-style: normal;">{article.headline}</h2>
                 <p class="article-card-summary">{article.summary}</p>
                 <span class="article-card-date">{formatDate(article.published_at)}</span>
               </div>
