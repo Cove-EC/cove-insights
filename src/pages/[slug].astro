@@ -1,0 +1,153 @@
+---
+import Base from '../layouts/Base.astro';
+import { getPublishedArticles, getArticleBySlug } from '../lib/supabase';
+import type { GetStaticPaths } from 'astro';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const articles = await getPublishedArticles();
+  return articles.map(article => ({
+    params: { slug: article.slug },
+  }));
+};
+
+const { slug } = Astro.params;
+const article = await getArticleBySlug(slug);
+
+if (!article) {
+  return Astro.redirect('/');
+}
+
+function formatDate(dateStr: string) {
+  return new Date(dateStr).toLocaleDateString('en-US', {
+    month: 'long', day: 'numeric', year: 'numeric'
+  });
+}
+---
+
+<Base
+  title={`${article.headline} — Cove Insights`}
+  description={article.meta_description || article.summary}
+  ogImage={article.og_image_url || article.hero_image_url || undefined}
+  canonicalUrl={article.canonical_url || `https://insights.covecollect.com/${article.slug}`}
+  noindex={article.noindex}
+  publishedAt={article.published_at}
+  articleType={true}
+>
+  <article style="max-width: 720px; margin: 0 auto; padding: 3rem 2rem;">
+
+    <!-- Category + Date -->
+    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+      {article.primary_category && (
+        <span style="font-size: 11px; font-weight: 600; color: var(--gold); text-transform: uppercase; letter-spacing: 0.05em;">
+          {article.primary_category}
+        </span>
+      )}
+      <span style="font-size: 13px; color: var(--text-secondary);">
+        {formatDate(article.published_at)}
+      </span>
+    </div>
+
+    <!-- Headline -->
+    <h1 style="font-family: 'Instrument Serif', serif; font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 400; line-height: 1.2; margin-bottom: 1rem;">
+      {article.headline}
+    </h1>
+
+    {article.subheadline && (
+      <p style="font-size: 1.125rem; color: var(--text-secondary); margin-bottom: 2rem; line-height: 1.5;">
+        {article.subheadline}
+      </p>
+    )}
+
+    <!-- Hero Image -->
+    {article.hero_image_url && (
+      <img
+        src={article.hero_image_url}
+        alt={article.headline}
+        style="width: 100%; border-radius: 8px; margin-bottom: 2.5rem; max-height: 480px; object-fit: cover;"
+      />
+    )}
+
+    <!-- Article Body -->
+    <div
+      class="article-body"
+      set:html={article.article_body}
+    />
+
+    <!-- Tags -->
+    {article.tags && article.tags.length > 0 && (
+      <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border);">
+        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+          {article.tags.map(tag => (
+            <span style="font-size: 12px; padding: 4px 10px; background: #F3F4F6; border-radius: 20px; color: var(--text-secondary);">
+              {tag}
+            </span>
+          ))}
+        </div>
+      </div>
+    )}
+
+    <!-- CTA -->
+    <div style="margin-top: 3rem; padding: 2rem; background: white; border: 1px solid var(--border); border-radius: 10px; text-align: center;">
+      <p style="font-family: 'Instrument Serif', serif; font-size: 1.25rem; margin-bottom: 0.5rem;">
+        Manage and protect your collection with Cove.
+      </p>
+      <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
+        USPAP-compliant appraisals, collection monitoring, and insurance valuations.
+      </p>
+      <a
+        href="https://covecollect.com"
+        style="display: inline-block; background: var(--gold); color: white; padding: 10px 24px; border-radius: 8px; font-weight: 600; font-size: 14px;"
+      >
+        Learn about Cove &rarr;
+      </a>
+    </div>
+
+  </article>
+</Base>
+
+<style>
+  .article-body {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: #1A1A1A;
+  }
+  .article-body h2 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 1.5rem;
+    font-weight: 400;
+    margin: 2rem 0 1rem;
+  }
+  .article-body h3 {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin: 1.5rem 0 0.75rem;
+  }
+  .article-body p {
+    margin-bottom: 1.25rem;
+  }
+  .article-body a {
+    color: #C4A55A;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .article-body blockquote {
+    border-left: 3px solid #C4A55A;
+    padding-left: 1.5rem;
+    margin: 1.5rem 0;
+    color: #6B7280;
+    font-style: italic;
+  }
+  .article-body img {
+    max-width: 100%;
+    border-radius: 6px;
+    margin: 1.5rem 0;
+  }
+  .article-body ul, .article-body ol {
+    padding-left: 1.5rem;
+    margin-bottom: 1.25rem;
+  }
+  .article-body li {
+    margin-bottom: 0.5rem;
+  }
+</style>

@@ -1,0 +1,61 @@
+---
+import Base from '../layouts/Base.astro';
+import { getPublishedArticles } from '../lib/supabase';
+
+const articles = await getPublishedArticles();
+
+function formatDate(dateStr: string) {
+  return new Date(dateStr).toLocaleDateString('en-US', {
+    month: 'long', day: 'numeric', year: 'numeric'
+  });
+}
+---
+
+<Base
+  title="Cove Insights — Market intelligence for serious collectors"
+  description="Analysis, market intelligence, and collecting perspective from Cove — for collectors who think in decades."
+>
+  <main style="max-width: 1200px; margin: 0 auto; padding: 3rem 2rem;">
+
+    <header style="margin-bottom: 3rem;">
+      <h1 style="font-family: 'Instrument Serif', serif; font-size: 2.5rem; font-weight: 400; color: var(--text-primary); margin-bottom: 0.5rem;">
+        Insights
+      </h1>
+      <p style="font-size: 1rem; color: var(--text-secondary);">
+        Market intelligence and collecting perspective.
+      </p>
+    </header>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 2rem;">
+      {articles.map(article => (
+        <a href={`/${article.slug}`} style="display: block; background: white; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; transition: box-shadow 0.15s ease;">
+          {article.hero_image_url && (
+            <img
+              src={article.hero_image_url}
+              alt={article.headline}
+              style="width: 100%; height: 220px; object-fit: cover;"
+              loading="lazy"
+            />
+          )}
+          <div style="padding: 1.5rem;">
+            {article.primary_category && (
+              <span style="font-size: 11px; font-weight: 600; color: var(--gold); text-transform: uppercase; letter-spacing: 0.05em;">
+                {article.primary_category}
+              </span>
+            )}
+            <h2 style="font-family: 'Instrument Serif', serif; font-size: 1.25rem; font-weight: 400; margin: 0.5rem 0; line-height: 1.4;">
+              {article.headline}
+            </h2>
+            <p style="font-size: 0.875rem; color: var(--text-secondary); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
+              {article.summary}
+            </p>
+            <p style="font-size: 12px; color: var(--text-secondary); margin-top: 1rem;">
+              {formatDate(article.published_at)}
+            </p>
+          </div>
+        </a>
+      ))}
+    </div>
+
+  </main>
+</Base>
