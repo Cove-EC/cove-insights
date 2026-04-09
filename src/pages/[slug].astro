@@ -137,6 +137,13 @@ function readTime(body?: string): string {
     )}
 
   </article>
+
+  <script define:vars={{ articleTitle: article.headline, articleCategory: article.primary_category }}>
+    window.gtag?.('event', 'blog_post_viewed', {
+      article_title: articleTitle,
+      article_category: articleCategory || 'uncategorized',
+    });
+  </script>
 </Base>
 
 <style>

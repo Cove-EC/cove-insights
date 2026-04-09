@@ -83,7 +83,11 @@ const defaultOgImage = `${siteUrl}/og-default.jpg`;
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-    gtag('config', 'G-CVBXNJGD79');
+    gtag('config', 'G-CVBXNJGD79', {
+      linker: {
+        domains: ['covecollect.com', 'insights.covecollect.com']
+      }
+    });
   </script>
 
   <style is:global>
@@ -145,7 +149,7 @@ const defaultOgImage = `${siteUrl}/og-default.jpg`;
       </span>
     </a>
     <div class="nav-links">
-      <a href="https://covecollect.com" class="nav-link">The Platform</a>
+      <a href="https://covecollect.com" class="nav-link" onclick="window.gtag?.('event', 'platform_nav_clicked', { source: 'insights_blog' })">The Platform</a>
       <a href="/" class="nav-link">Insights</a>
     </div>
   </nav>

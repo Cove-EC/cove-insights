@@ -119,6 +119,17 @@ const categories = ['All', 'Art', 'Cars', 'Watches', 'Wine'];
     )}
 
   </main>
+
+  <script>
+    document.querySelectorAll('.article-card, .hero-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const headline = card.querySelector('.article-card-headline, .hero-headline, .article-text-card-headline');
+        window.gtag?.('event', 'blog_card_clicked', {
+          article_title: headline?.textContent?.trim() || 'Unknown',
+        });
+      });
+    });
+  </script>
 </Base>
 
 <style>
