@@ -120,7 +120,7 @@ const categories = ['All', 'Art', 'Cars', 'Watches', 'Wine'];
 
   </main>
 
-  <script>
+  <script is:inline>
     document.querySelectorAll('.article-card, .hero-card').forEach(card => {
       card.addEventListener('click', () => {
         const headline = card.querySelector('.article-card-headline, .hero-headline, .article-text-card-headline');
