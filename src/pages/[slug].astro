@@ -41,6 +41,10 @@ function readTime(body?: string): string {
   canonicalUrl={article.canonical_url || `https://insights.covecollect.com/${article.slug}`}
   noindex={article.noindex}
   publishedAt={article.published_at}
+  updatedAt={article.updated_at || undefined}
+  articleBody={article.article_body || undefined}
+  articleCategory={article.primary_category || undefined}
+  articleSlug={article.slug}
   articleType={true}
 >
   <!-- HERO IMAGE — edge to edge -->

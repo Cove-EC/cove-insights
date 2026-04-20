@@ -20,6 +20,7 @@ export interface Article {
   tags: string[] | null;
   related_artists: string[] | null;
   published_at: string;
+  updated_at: string | null;
   content_type: string | null;
   is_featured: boolean;
   noindex: boolean;
@@ -31,7 +32,7 @@ export async function getPublishedArticles(): Promise<Article[]> {
     .select(`
       id, headline, subheadline, hero_image_url,
       summary, slug, meta_description, og_image_url,
-      primary_category, tags, published_at, content_type,
+      primary_category, tags, published_at, updated_at, content_type,
       is_featured, noindex, canonical_url
     `)
     .eq('status', 'published')

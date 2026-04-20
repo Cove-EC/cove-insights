@@ -1,0 +1,8 @@
+# Cove Insights — crawler directives
+# https://insights.covecollect.com/robots.txt
+
+User-agent: *
+Allow: /
+
+# Point to the auto-generated sitemap index (from @astrojs/sitemap)
+Sitemap: https://insights.covecollect.com/sitemap-index.xml
