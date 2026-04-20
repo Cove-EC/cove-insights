@@ -388,15 +388,24 @@ const articleBodyForSchema = articleBody
     .site-header-hamburger { display: inline-flex; }
   }
 
+  /* Hidden by default — CSS display wins over the HTML `hidden` attribute
+     when a non-none display is set. Only reveal on mobile viewport when
+     the script removes the [hidden] attribute. */
   .site-header-mobile {
+    display: none;
     padding: 8px 24px 20px;
-    display: flex;
     flex-direction: column;
     gap: 4px;
     background: rgba(9, 9, 11, 0.95);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border-top: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  @media (max-width: 767px) {
+    .site-header-mobile:not([hidden]) {
+      display: flex;
+    }
   }
 
   .mobile-link {
