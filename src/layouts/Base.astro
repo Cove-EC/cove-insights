@@ -75,7 +75,7 @@ const defaultOgImage = `${siteUrl}/og-default.jpg`;
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300;1,9..40,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Work+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
   <!-- GA4 -->
   <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-CVBXNJGD79"></script>
@@ -92,19 +92,26 @@ const defaultOgImage = `${siteUrl}/og-default.jpg`;
 
   <style is:global>
     :root {
-      --bg: #0C0C0A;
-      --bg-elevated: #141412;
-      --bg-subtle: #1A1A17;
+      /* Aligned with covecollect.com palette — cove-950 / cove-warm from the
+         main site's Tailwind config so insights.covecollect.com feels
+         like a continuation of the product site. */
+      --bg: #09090b;
+      --bg-elevated: #131316;
+      --bg-subtle: #1a1a1f;
       --text-primary: #F5F4F0;
       --text-secondary: #9B9B8E;
       --text-tertiary: #5C5C52;
-      --gold: #C4A55A;
-      --gold-muted: #8A7340;
-      --gold-subtle: rgba(196, 165, 90, 0.12);
+      --gold: #c9a86c;
+      --gold-hover: #d4b87d;
+      --gold-muted: #8b7355;
+      --gold-subtle: rgba(201, 168, 108, 0.12);
       --border: rgba(245, 244, 240, 0.06);
       --border-strong: rgba(245, 244, 240, 0.12);
-      --font-display: 'Instrument Serif', Georgia, serif;
-      --font-body: 'DM Sans', system-ui, sans-serif;
+      /* Match covecollect.com — Plus Jakarta Sans is the site-wide face.
+         Cormorant Garamond is retained for occasional editorial serif moments. */
+      --font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --font-serif: 'Cormorant Garamond', Georgia, serif;
       --space-xs: 4px;
       --space-sm: 8px;
       --space-md: 16px;
@@ -136,23 +143,61 @@ const defaultOgImage = `${siteUrl}/og-default.jpg`;
   </style>
 </head>
 <body>
-  <!-- NAV -->
-  <nav class="site-nav">
-    <a href="https://covecollect.com" style="display: flex; flex-direction: column; gap: 2px; text-decoration: none;">
-      <img
-        src="https://covecollect.com/assets/cove-wordmark-white-D7q9atQp.png"
-        alt="Cove"
-        style="height: 18px; width: auto; object-fit: contain;"
-      />
-      <span style="font-family: 'DM Sans', sans-serif; font-size: 9px; font-weight: 500; color: var(--gold); text-transform: uppercase; letter-spacing: 0.12em;">
-        Insights
-      </span>
-    </a>
-    <div class="nav-links">
-      <a href="https://covecollect.com" class="nav-link" onclick="window.gtag?.('event', 'platform_nav_clicked', { source: 'insights_blog' })">The Platform</a>
-      <a href="/" class="nav-link">Insights</a>
+  <!-- NAV — mirrors covecollect.com PublicShell header for cross-site parity -->
+  <header class="site-header" id="site-header">
+    <div class="site-header-inner">
+      <a href="https://covecollect.com" class="site-header-logo" aria-label="Cove Collect home">
+        <img src="/cove-wordmark-white.png" alt="Cove Collect" />
+      </a>
+
+      <nav class="site-header-nav" aria-label="Primary">
+        <a href="https://covecollect.com/#what-is-cove" class="nav-link" onclick="window.gtag?.('event', 'platform_nav_clicked', { source: 'insights_blog' })">The Platform</a>
+        <a href="/" class="nav-link" aria-current="page">Insights</a>
+        <a href="https://covecollect.com" class="nav-link">Log In</a>
+        <a href="https://covecollect.com/request-access" class="nav-cta" onclick="window.gtag?.('event', 'request_access_clicked', { source: 'insights_nav' })">Request Access</a>
+      </nav>
+
+      <button class="site-header-hamburger" id="site-header-hamburger" aria-label="Toggle menu" aria-expanded="false">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
     </div>
-  </nav>
+
+    <div class="site-header-mobile" id="site-header-mobile" hidden>
+      <a href="https://covecollect.com/#what-is-cove" class="mobile-link">The Platform</a>
+      <a href="/" class="mobile-link">Insights</a>
+      <a href="https://covecollect.com" class="mobile-link">Log In</a>
+      <a href="https://covecollect.com/request-access" class="mobile-cta">Request Access</a>
+    </div>
+  </header>
+
+  <script is:inline>
+    // Transparent-at-top → opaque-with-blur on scroll, matching PublicShell behavior.
+    (function () {
+      const header = document.getElementById('site-header');
+      if (!header) return;
+      const onScroll = () => {
+        if (window.scrollY > 50) header.classList.add('site-header--scrolled');
+        else header.classList.remove('site-header--scrolled');
+      };
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+
+      const toggle = document.getElementById('site-header-hamburger');
+      const mobile = document.getElementById('site-header-mobile');
+      if (toggle && mobile) {
+        toggle.addEventListener('click', () => {
+          const isOpen = !mobile.hasAttribute('hidden');
+          if (isOpen) {
+            mobile.setAttribute('hidden', '');
+            toggle.setAttribute('aria-expanded', 'false');
+          } else {
+            mobile.removeAttribute('hidden');
+            toggle.setAttribute('aria-expanded', 'true');
+          }
+        });
+      }
+    })();
+  </script>
 
   <slot />
 
@@ -177,88 +222,149 @@ const defaultOgImage = `${siteUrl}/og-default.jpg`;
 </html>
 
 <style>
-  .site-nav {
-    position: sticky;
+  /* ──────────────────────────────────────────────────────────────────────
+     Header — structural parity with covecollect.com PublicShell.
+     Transparent at top; opaque + blur after 50px scroll.
+     Fixed, not sticky — matches main site's behavior over the hero area.
+     ────────────────────────────────────────────────────────────────────── */
+  .site-header {
+    position: fixed;
     top: 0;
+    left: 0;
+    right: 0;
     z-index: 100;
-    height: 64px;
+    transition: background 300ms ease, backdrop-filter 300ms ease, border-color 300ms ease;
+    background: transparent;
+    border-bottom: 1px solid transparent;
+  }
+
+  .site-header--scrolled {
+    background: rgba(9, 9, 11, 0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom-color: rgba(255, 255, 255, 0.05);
+  }
+
+  .site-header-inner {
+    max-width: var(--max-content);
+    margin: 0 auto;
+    min-height: 72px;
+    padding: 16px 24px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 2rem;
-    background: rgba(12, 12, 10, 0.92);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
   }
 
-  .nav-wordmark {
+  .site-header-logo {
     display: flex;
     align-items: center;
-    gap: 10px;
+    text-decoration: none;
   }
 
-  .nav-wordmark-cove {
-    font-family: var(--font-display);
-    font-style: italic;
-    font-size: 22px;
-    color: var(--text-primary);
+  .site-header-logo img {
+    height: 32px;
+    width: auto;
+    object-fit: contain;
   }
 
-  .nav-wordmark-divider {
-    width: 1px;
-    height: 16px;
-    background: var(--border-strong);
+  @media (max-width: 767px) {
+    .site-header-logo img { height: 28px; }
   }
 
-  .nav-wordmark-insights {
-    font-family: var(--font-body);
-    font-weight: 400;
-    font-size: 13px;
-    color: var(--text-secondary);
-  }
-
-  .nav-links {
+  .site-header-nav {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 24px;
+  }
+
+  @media (max-width: 767px) {
+    .site-header-nav { display: none; }
   }
 
   .nav-link {
     font-family: var(--font-body);
-    font-weight: 400;
-    font-size: 13px;
-    color: var(--text-secondary);
-    transition: color 150ms;
-  }
-
-  .nav-link:hover {
-    color: var(--text-primary);
-  }
-
-  .nav-link-gold {
     font-weight: 500;
-    color: var(--gold);
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    transition: color 200ms;
   }
 
-  .nav-link-gold:hover {
-    color: var(--gold);
-    text-decoration: underline;
-    text-underline-offset: 3px;
+  .nav-link:hover,
+  .nav-link[aria-current="page"] {
+    color: #fff;
   }
 
-  .nav-links-divider {
-    width: 1px;
-    height: 16px;
-    background: var(--border-strong);
-  }
-
-  .nav-link-mobile {
-    display: none;
+  .nav-cta {
     font-family: var(--font-body);
     font-weight: 500;
-    font-size: 13px;
+    font-size: 14px;
+    background: var(--gold);
+    color: #09090b;
+    padding: 10px 20px;
+    border-radius: 9999px;
+    text-decoration: none;
+    transition: background 200ms;
   }
+
+  .nav-cta:hover {
+    background: var(--gold-hover);
+  }
+
+  .site-header-hamburger {
+    display: none;
+    background: transparent;
+    border: 0;
+    padding: 8px;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+  }
+
+  .site-header-hamburger:hover { color: #fff; }
+
+  @media (max-width: 767px) {
+    .site-header-hamburger { display: inline-flex; }
+  }
+
+  .site-header-mobile {
+    padding: 8px 24px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    background: rgba(9, 9, 11, 0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .mobile-link {
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.7);
+    padding: 12px 0;
+    text-decoration: none;
+  }
+
+  .mobile-link:hover { color: #fff; }
+
+  .mobile-cta {
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: 14px;
+    background: var(--gold);
+    color: #09090b;
+    padding: 12px 24px;
+    border-radius: 9999px;
+    text-decoration: none;
+    text-align: center;
+    margin-top: 8px;
+  }
+
+  .mobile-cta:hover { background: var(--gold-hover); }
+
+  /* Push page content below the fixed header */
+  body { padding-top: 72px; }
 
   .site-footer {
     border-top: 1px solid var(--border);
