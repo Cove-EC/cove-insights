@@ -185,17 +185,16 @@ const cleanBody = cleanArticleBody(article.article_body);
     border-radius: 3px;
   }
 
-  /* CONTAINER — modest width bump from 680 → 740 for better
-     proportions against the wider hero above it. */
+  /* CONTAINER */
   .article-container {
-    max-width: 740px;
+    max-width: 800px;
     margin: 0 auto;
     padding: 0 2rem;
   }
 
   /* HEADER */
   .article-header {
-    padding: 48px 0 40px;
+    padding: 48px 0 20px;
   }
 
   .article-header-meta-top {
@@ -258,7 +257,7 @@ const cleanBody = cleanArticleBody(article.article_body);
   .article-header-rule {
     height: 1px;
     background: var(--border);
-    margin-top: 32px;
+    margin-top: 20px;
   }
 
   /* ARTICLE BODY */
@@ -268,6 +267,14 @@ const cleanBody = cleanArticleBody(article.article_body);
     line-height: 1.85;
     color: var(--text-secondary);
     font-weight: 300;
+    margin-top: 28px;
+  }
+
+  /* Kill any default top margin on the first element of the body —
+     h3/h2/p all have aggressive top margins that compound with the
+     header's padding-bottom and produce ~72px of empty space. */
+  .article-body :global(> *:first-child) {
+    margin-top: 0 !important;
   }
 
   .article-body :global(> p:first-child) {
@@ -321,7 +328,42 @@ const cleanBody = cleanArticleBody(article.article_body);
   .article-body :global(img) {
     width: 100%;
     border-radius: 3px;
-    margin: 40px 0;
+    /* Tight bottom margin so any caption below sits close to the image */
+    margin: 40px 0 8px;
+  }
+
+  /* Image captions — the editor saves captions as <h4> immediately after
+     the <img>. Style them as small italic metadata, centered, tight under
+     the image. If you ever start using <figcaption>, those inherit here
+     too via the figure + figcaption cascade below. */
+  .article-body :global(h4) {
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--text-tertiary);
+    line-height: 1.5;
+    text-align: center;
+    margin: 0 auto 40px;
+    max-width: 80%;
+  }
+
+  .article-body :global(figcaption) {
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--text-tertiary);
+    line-height: 1.5;
+    text-align: center;
+    margin: 8px auto 0;
+    max-width: 80%;
+  }
+
+  /* Empty paragraphs the editor sometimes emits between an image and
+     its caption create unwanted vertical space. Collapse them. */
+  .article-body :global(p:empty) {
+    display: none;
   }
 
   .article-body :global(ul),
