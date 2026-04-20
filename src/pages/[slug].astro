@@ -32,6 +32,20 @@ function readTime(body?: string): string {
   const words = body.replace(/<[^>]*>/g, '').split(/\s+/).length;
   return `${Math.max(1, Math.ceil(words / 200))} min read`;
 }
+
+// The editor saves article_body with the headline as an <h1> and a
+// Summary: paragraph at the top — both are redundant in the detail view
+// (we already render the headline and have the summary on the index + in
+// meta tags). Strip them before rendering. Idempotent — articles that
+// don't have them are unaffected.
+function cleanArticleBody(html: string | null | undefined): string {
+  if (!html) return '';
+  return html
+    .replace(/^\s*<h1\b[^>]*>[\s\S]*?<\/h1>\s*/i, '')
+    .replace(/^\s*<p\b[^>]*>\s*<strong\b[^>]*>\s*Summary\s*:?\s*<\/strong>[\s\S]*?<\/p>\s*/i, '');
+}
+
+const cleanBody = cleanArticleBody(article.article_body);
 ---
 
 <Base
@@ -47,7 +61,8 @@ function readTime(body?: string): string {
   articleSlug={article.slug}
   articleType={true}
 >
-  <!-- HERO IMAGE — edge to edge -->
+  <!-- HERO IMAGE — natural aspect ratio, capped height, centered.
+       Edge-to-edge cover crop was destroying portrait images. -->
   {article.hero_image_url && (
     <div class="article-hero">
       <img
@@ -75,8 +90,6 @@ function readTime(body?: string): string {
       )}
       <div class="article-meta-row">
         <span>{readTime(article.article_body)}</span>
-        <span class="article-meta-sep">&middot;</span>
-        <span>{formatDate(article.published_at)}</span>
       </div>
       <div class="article-header-rule"></div>
     </header>
@@ -84,7 +97,7 @@ function readTime(body?: string): string {
     <!-- ARTICLE BODY -->
     <div
       class="article-body"
-      set:html={article.article_body}
+      set:html={cleanBody}
     />
 
     <!-- TAGS -->
@@ -151,23 +164,31 @@ function readTime(body?: string): string {
 </Base>
 
 <style>
-  /* HERO */
+  /* HERO — centered, natural aspect ratio, capped so tall portrait
+     images don't push the article below the fold. Works for landscape,
+     square, and portrait without cropping. */
   .article-hero {
-    width: 100%;
-    max-height: 520px;
-    overflow: hidden;
+    max-width: 1100px;
+    margin: 32px auto 0;
+    padding: 0 2rem;
+    display: flex;
+    justify-content: center;
   }
 
   .article-hero-img {
-    width: 100%;
-    height: 520px;
-    object-fit: cover;
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 70vh;
+    object-fit: contain;
     display: block;
+    border-radius: 3px;
   }
 
-  /* CONTAINER */
+  /* CONTAINER — modest width bump from 680 → 740 for better
+     proportions against the wider hero above it. */
   .article-container {
-    max-width: var(--max-article);
+    max-width: 740px;
     margin: 0 auto;
     padding: 0 2rem;
   }
@@ -550,8 +571,13 @@ function readTime(body?: string): string {
       padding: 0 1rem;
     }
 
+    .article-hero {
+      padding: 0 1rem;
+      margin-top: 16px;
+    }
+
     .article-hero-img {
-      height: 280px;
+      max-height: 60vh;
     }
 
     .article-headline {
