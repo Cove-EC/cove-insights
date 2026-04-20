@@ -265,7 +265,7 @@ const cleanBody = cleanArticleBody(article.article_body);
     font-family: var(--font-body);
     font-size: 17px;
     line-height: 1.85;
-    color: var(--text-secondary);
+    color: var(--text-primary);
     font-weight: 300;
     margin-top: 28px;
   }
@@ -341,7 +341,8 @@ const cleanBody = cleanArticleBody(article.article_body);
     font-size: 12px;
     font-weight: 400;
     font-style: italic;
-    color: var(--text-tertiary);
+    /* Readable white-ish, slightly dimmer than body to stay subordinate */
+    color: rgba(245, 244, 240, 0.75);
     line-height: 1.5;
     text-align: center;
     margin: 0 auto 40px;
@@ -353,7 +354,7 @@ const cleanBody = cleanArticleBody(article.article_body);
     font-size: 12px;
     font-weight: 400;
     font-style: italic;
-    color: var(--text-tertiary);
+    color: rgba(245, 244, 240, 0.75);
     line-height: 1.5;
     text-align: center;
     margin: 8px auto 0;
@@ -374,7 +375,7 @@ const cleanBody = cleanArticleBody(article.article_body);
 
   .article-body :global(li) {
     margin-bottom: 10px;
-    color: var(--text-secondary);
+    color: var(--text-primary);
   }
 
   .article-body :global(strong) {
