@@ -19,7 +19,7 @@
       "permanent": true
     },
     {
-      "source": "/:path*",
+      "source": "/(.*)",
       "destination": "https://covecollect.com/insights",
       "permanent": true
     }
