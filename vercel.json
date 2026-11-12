@@ -9,8 +9,18 @@
       "permanent": true
     },
     {
+      "source": "/:slug/",
+      "destination": "https://covecollect.com/insights/:slug",
+      "permanent": true
+    },
+    {
       "source": "/:slug",
       "destination": "https://covecollect.com/insights/:slug",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "destination": "https://covecollect.com/insights",
       "permanent": true
     }
   ]
